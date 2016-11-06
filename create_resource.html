@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Resource</title>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+</head>
+<body>
+    <h1 id="title"><a>Reservation Master: Create New Resource</a></h1>
+  <hr>
+  
+  <form action="/create_resource/" method="post">
+    <input class="createresourceInput" type="text" name="resource_name" required> Resource Name<br><br>
+    <input class="createresourceInput" type="datetime-local" name="resource_start_time" required> Start Time<br><br>
+    <input class="createresourceInput" type="datetime-local" name="resource_end_time" required> End Time<br><br>
+    <input class="createresourceInput" type="text" name="resource_tags"> Tags (e.g. kitchen,classroom)<br><br>
+    <input type="submit" value="Create resource">
+  </form>
+  
+  {% if notification %}
+    <p class="notification">
+      {{ notification }}
+    </p>
+  {% endif %}
+  
+  <hr>
+  
+  <div id="titleLink">
+      <button onclick="location.href='/'">Back to HomePage</button>
+  </div>
+  
+  <div id="loginButton">
+      <button onclick="location.href='{{ userLogInOutLink|safe }}'">{{ userLogInOutText }}</button>
+  </div>
+  
+</body>
+</html>

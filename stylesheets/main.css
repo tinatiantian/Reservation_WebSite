@@ -1,0 +1,158 @@
+.createresourceInput {
+  width: 500px;
+}
+
+.itemMarker {
+  font-size: 100%;
+  color: blue;
+}
+
+.buttonForm {
+  display: inline-block;
+}
+
+.homePageresourceNameButton {
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  font: inherit;
+  font-size: 110%;
+}
+
+.homePageresourceNameButton:hover {
+  color: red;
+  margin: 0;
+  padding: 0;
+}
+
+.homePageUserNameButton {
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  font: inherit;
+}
+
+.homePageUserNameButton:hover {
+  color: red;
+  margin: 0;
+  padding: 0;
+}
+
+.homePageresourceDateTime {
+  font-size: 100%;
+}
+
+.homePageresourceTags {
+  font-size: 100%;
+}
+
+.resourceDateTime {
+  font-size: 100%;
+}
+
+.tagButton {
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  font: inherit;
+}
+
+.tagButton:hover {
+  color: red;
+  margin: 0;
+  padding: 0;
+}
+
+.notification {
+  color: red;
+  font-size: 120%;
+}
+
+.cancelButton {
+
+}
+
+.headerFont {
+  font-size: 130%;
+  font-weight: bold;
+  color: blue;
+}
+
+#title {
+  color: blue;
+  display: inline-block;
+}
+
+#titleLink:link {
+  color: blue;
+  text-decoration: none;
+}
+
+#titleLink:visited {
+  color: blue;
+  text-decoration: none;
+}
+
+#titleLink:hover {
+  color: blue;
+  text-decoration: none;
+}
+
+#titleLink:active {
+  color: blue;
+  text-decoration: none;
+}
+
+#subtitle {
+  display: inline-block;
+}
+
+#myresourcesDiv {
+  margin: 1em;
+}
+
+#loginButton {
+  display: inline-block;
+}
+
+#myReservationsDiv {
+  display: inline-block;
+  width: 30%;
+  margin: 1em;
+  vertical-align: top;
+}
+
+#allresourcesDiv {
+  display: inline-block;
+  width: 40%;
+  margin: 1em;
+  vertical-align: top;
+}
+
+#alltagsDiv {
+    display: inline-block;
+    width: 40%;
+    margin: 1em;
+    vertical-align: top;
+}
+
+#allusersDiv {
+    display: inline-block;
+    width: 40%;
+    margin: 1em;
+    vertical-align: top;
+}
+
+#userReservationsDiv {
+  display: inline-block;
+  width: 40%;
+  margin: 1em;
+  vertical-align: top;
+}
+
+#userresourcesDiv {
+  display: inline-block;
+  width 40%;
+  margin: 1em;
+  vertical-align: top;
+}

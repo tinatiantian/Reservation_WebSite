@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Page</title>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+</head>
+<body>
+    <h1 id="title"><a>Reservation Master User: {{ seekUserName }}</a></h1>
+    <br>
+    {% if user %}
+    <span>Welcome, {{user}}</span>
+    {% else %}
+    <span>You are not signed in.</span>
+    {% endif %}
+  <hr>
+  
+  <form class="buttonForm" action="/user" method="post">
+	<input type="hidden" name="seekUserId" value="{{ seekUserId }}">
+	<input type="hidden" name="seekUserName" value="{{ seekUserName }}">
+  </form><br>
+  <div id="userReservationsDiv">
+      <h3>User {{ seekUserName }}'s Current Reservations:</h3>
+    {% for reservation in reservations %}
+      {% if reservation.reservationOwner == seekUserId and (reservation.reservationStartTime + datetime.timedelta(seconds = 60 * reservation.reservationDuration)) > present %}
+        <span class="homePageresource">
+  	    <span class="itemMarker">Resource:</span>
+  	    <form class="buttonForm" action="/resource" method="post">
+		<input type="hidden" name="resourceGUID" value="{{ reservation.resourceGUID }}">
+	    <button class="homePageresourceNameButton" onclick="form.submit();">{{ reservation.resourceName }}</button>
+	    </form><br>
+	    
+	    <span class="itemMarker">Owner: </span>
+	    <form class="buttonForm" action="/user" method="post">
+		<input type="hidden" name="seekUserId" value="{{ reservation.resourceOwner }}">
+		<input type="hidden" name="seekUserName" value="{{ reservation.resourceInstructor }}">
+	    <button class="homePageUserNameButton" onclick="form.submit();">{{ reservation.resourceInstructor }}</button>
+	    </form><br>
+  	    <span class="itemMarker">Start Time: </span><span class="homePageresourceDateTime">{{ reservation.reservationStartTime }}</span><br>
+  	    <span class="itemMarker">Duration (minutes): </span><span class="homePageresourceDateTime">{{ reservation.reservationDuration }}</span><br>
+  	    <br>
+        </span>
+      {% endif %}
+    {% endfor %}
+  </div>
+  
+  <hr>
+  
+  <div id="userresourcesDiv">
+      <h3>User {{ seekUserName }}'s Owned Resources:</h3>
+    {% for resource in resources %}
+      {% if resource.resourceOwner == seekUserId and resource.resourceEndTime > present%}
+        <span class="homePageresource">
+  	    <span class="itemMarker">Resource:</span>
+		<form class="buttonForm" action="/resource" method="post">
+		<input type="hidden" name="resourceGUID" value="{{ resource.resourceGUID }}">
+	    <button class="homePageresourceNameButton" onclick="form.submit();">{{ resource.resourceName }}</button>
+	    </form><br>
+  	    <span class="itemMarker">Available From</span> <span class="homePageresourceDateTime">{{ resource.resourceStartTime }}</span> <span class="itemMarker">to</span> <span class="homePageresourceDateTime">{{ resource.resourceEndTime }}</span><br>
+  	    <span class="itemMarker">Tags:</span> <span class="homePageresourceTags">
+		  {% for tag in str(resource.resourceTags).split(",") %}
+            <form class="buttonForm" action="/tag/" method="post">
+              <input type="hidden" name="tagName" value="{{ tag }}">
+              <button class="tagButton" onclick="form.submit();">{{ tag.strip() }}</button>
+            </form>
+  	      {% endfor %}
+		</span>
+		<br>
+  	    <br>
+        </span>
+      {% endif %}
+    {% endfor %}
+  </div>
+  
+  <hr>
+  
+  <div id="titleLink">
+      <button onclick="location.href='/'">Back to HomePage</button>
+  </div>
+  
+  <div id="loginButton">
+      <button onclick="location.href='{{ userLogInOutLink|safe }}'">{{ userLogInOutText }}</button>
+  </div>
+  
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reservation Master</title>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+</head>
+<body>
+  <h1 id="title"><a>Reservation Master</a></h1>
+  <br>
+  {% if user %}
+  <span>Welcome, {{user}}</span>
+  {% else %}
+  <span>You are not signed in.</span>
+  {% endif %}
+  <hr>
+  
+  {% if user %}
+  <div id="myReservationsDiv">
+      <h2>Reservations for {{user}}</h2>
+      {% for reservation in reservations %}
+      {% if user and reservation.reservationOwner == userId and (reservation.reservationStartTime + datetime.timedelta(seconds = 60 * reservation.reservationDuration)) > present %}
+      <span class="homePageresource">
+          <span class="itemMarker">Resource:</span>
+          <form class="buttonForm" action="/resource" method="post">
+              <input type="hidden" name="resourceGUID" value="{{ reservation.resourceGUID }}">
+                  <button class="homePageresourceNameButton" onclick="form.submit();">{{ reservation.resourceName }}</button>
+                  </form><br>
+          
+          <span class="itemMarker">Owner: </span>
+          <form class="buttonForm" action="/user" method="post">
+              <input type="hidden" name="seekUserId" value="{{ reservation.resourceOwner }}">
+                  <input type="hidden" name="seekUserName" value="{{ reservation.resourceInstructor }}">
+                      <button class="homePageUserNameButton" onclick="form.submit();">{{ reservation.resourceInstructor }}</button>
+                      </form><br>
+          <span class="itemMarker">Start Time: </span><span class="homePageresourceDateTime">{{ reservation.reservationStartTime }}</span><br>
+          <span class="itemMarker">Duration(minutes): </span><span class="homePageresourceDateTime">{{ reservation.reservationDuration }}</span><br>
+          
+          <form action="/" method="post">
+              <input type="hidden" name="reservationGUID" value="{{ reservation.reservationGUID }}">
+                  <input class="cancelButton" type="submit" name="delete_form_submit" value="Cancel This Reservation">
+                      </form>
+          <br>
+      </span>
+      {% endif %}
+      {% endfor %}
+  </div>
+  
+  <hr>
+  
+  <div id="myresourcesDiv">
+    <h2>Resources Owned by {{user}}</h2>
+    {% for resource in resources %}
+      {% if user and resource.resourceOwner == userId and resource.resourceEndTime > present %}
+        <span class="homePageresource">
+  	    <span class="itemMarker">Resource:</span>
+		<form class="buttonForm" action="/resource" method="post">
+		<input type="hidden" name="resourceGUID" value="{{ resource.resourceGUID }}">
+	    <button class="homePageresourceNameButton" onclick="form.submit();">{{ resource.resourceName }}</button>
+	    </form><br>
+  	    <span class="itemMarker">Available from</span> <span class="homePageresourceDateTime">{{ resource.resourceStartTime }}</span> <span class="itemMarker">to</span> <span class="homePageresourceDateTime">{{ resource.resourceEndTime }}</span><br>
+  	    <span class="itemMarker">Tags:</span> <span class="homePageresourceTags">
+		  {% for tag in str(resource.resourceTags).split(",") %}
+            <form class="buttonForm" action="/tag/" method="post">
+              <input type="hidden" name="tagName" value="{{ tag }}">
+              <button class="tagButton" onclick="form.submit();">{{ tag.strip() }}</button>
+            </form>
+  	      {% endfor %}
+		</span><br> 	    
+  	    <br>
+        </span>
+      {% endif %}
+    {% endfor %}
+  </div>
+  </br>
+  
+  {% else %}
+  <h2>Please Sign In to Make Reservations</h2>
+  {% endif %}
+  
+  <hr>
+  <div id="allresourcesDiv">
+      <h2>All Resources</h2>
+      {% for resource in resourcesByLastReservation %}
+      {% if resource.resourceEndTime > present %}
+      <span class="homePageresource">
+          <span class="itemMarker">Resource:</span>
+          <form class="buttonForm" action="/resource" method="post">
+              <input type="hidden" name="resourceGUID" value="{{ resource.resourceGUID }}">
+                  <button class="homePageresourceNameButton" onclick="form.submit();">{{ resource.resourceName }}</button>
+                  </form><br>
+          
+          <span class="itemMarker">Owner: </span>
+          <form class="buttonForm" action="/user" method="post">
+              <input type="hidden" name="seekUserId" value="{{ resource.resourceOwner }}">
+                  <input type="hidden" name="seekUserName" value="{{ resource.resourceInstructor }}">
+                      <button class="homePageUserNameButton" onclick="form.submit();">{{ resource.resourceInstructor }}</button>
+                      </form><br>
+          
+          <span class="itemMarker">Available from</span> <span class="homePageresourceDateTime">{{ resource.resourceStartTime }}</span> <span class="itemMarker">to</span> <span class="homePageresourceDateTime">{{ resource.resourceEndTime }}</span><br>
+          <span class="itemMarker">Tags:</span> <span class="homePageresourceTags">
+              {% for tag in str(resource.resourceTags).split(",") %}
+              <form class="buttonForm" action="/tag/" method="post">
+                  <input type="hidden" name="tagName" value="{{ tag }}">
+                      <button class="tagButton" onclick="form.submit();">{{ tag.strip() }}</button>
+                      </form>
+              {% endfor %}
+          </span><br>
+          
+          <br>
+      </span>
+      {% endif %}
+      {% endfor %}
+  </div>
+  
+  <hr>
+
+  <div id="alltagsDiv">
+      <h2>All Tags</h2>
+      {% for tag in allTags %}
+      <form class="buttonForm" action="/tag/" method="post">
+          <input type="hidden" name="tagName" value="{{ tag }}">
+              <button class="tagButton" onclick="form.submit();">{{ tag.strip() }}</button>
+              </form><br>
+      {% endfor %}
+  </div>
+  
+  <hr>
+  
+  <div>
+      <button onclick="location.href='/create_resource.html'">Create a New Resource</button>
+  </div>
+  
+  <div id="titleLink">
+      <button onclick="location.href='/'">Back to HomePage</button>
+  </div>
+  
+  <div id="loginButton">
+      <button onclick="location.href='{{ userLogInOutLink|safe }}'">{{ userLogInOutText }}</button>
+  </div>
+  
+</body>
+</html>

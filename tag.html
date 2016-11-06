@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tag Page</title>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+</head>
+<body>
+    <h1 id="title"><a>Reservation Master Tag: {{ tagName }}</a></h1>
+    <br>
+    {% if user %}
+    <span>Welcome, {{user}}</span>
+    {% else %}
+    <span>You are not signed in.</span>
+    {% endif %}
+  <hr>
+  
+  <div id="userresourcesDiv">
+     
+	<form class="buttonForm" action="/tag/" method="post">
+      <input type="hidden" name="tagName" value="{{ tagName }}">
+    </form>
+    <br>
+    
+    {% for resource in resources %}
+      {% if resource.resourceEndTime > present%}
+        <span class="homePageresource">
+  	    <span class="itemMarker">Resource:</span>
+		<form class="buttonForm" action="/resource" method="post">
+		<input type="hidden" name="resourceGUID" value="{{ resource.resourceGUID }}">
+	    <button class="homePageresourceNameButton" onclick="form.submit();">{{ resource.resourceName }}</button>
+	    </form><br>
+	    
+	    <span class="itemMarker">Owner: </span>
+	    <form class="buttonForm" action="/user" method="post">
+		<input type="hidden" name="seekUserId" value="{{ resource.resourceOwner }}">
+		<input type="hidden" name="seekUserName" value="{{ resource.resourceInstructor }}">
+	    <button class="homePageUserNameButton" onclick="form.submit();">{{ resource.resourceInstructor }}</button>
+	    </form><br>
+	    
+  	    <span class="itemMarker">Available From</span> <span class="homePageresourceDateTime">{{ resource.resourceStartTime }}</span> <span class="itemMarker">to</span> <span class="homePageresourceDateTime">{{ resource.resourceEndTime }}</span><br>
+  	    <span class="itemMarker">Tags:</span> <span class="homePageresourceTags">
+		  {% for tag in str(resource.resourceTags).split(",") %}
+            <form class="buttonForm" action="/tag/" method="post">
+              <input type="hidden" name="tagName" value="{{ tag }}">
+              <button class="tagButton" onclick="form.submit();">{{ tag.strip() }}</button>
+            </form>
+  	      {% endfor %}
+		</span><br>
+  	    {% for tag in tags %}
+          <form class="buttonForm" action="/tag/" method="post">
+            <input type="hidden" name="tagName" value="{{ tag }}">
+            <button class="tagButton" onclick="form.submit();">{{ tag }}</button>
+          </form>
+        {% endfor %}
+        
+  	    <br>
+        </span>
+      {% endif %}
+    {% endfor %}
+  </div>
+  
+  <hr>
+  
+  <div id="titleLink">
+      <button onclick="location.href='/'">Back to HomePage</button>
+  </div>
+  
+  <div id="loginButton">
+      <button onclick="location.href='{{ userLogInOutLink|safe }}'">{{ userLogInOutText }}</button>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>XML Page</title>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+</head>
+<body>
+    <h1 id="title"><a>Reservation Master: XML File</a></h1>
+  <hr>
+
+  <p>
+    &lt?xml version="1.0" encoding="UTF-8" ?&gt<br>
+    &ltrss version="2.0"&gt<br>
+    &ltreservations&gt<br>
+      {% for reservation in reservations %}
+        {% if reservation.resourceGUID == resourceGUID and (reservation.reservationStartTime + datetime.timedelta(seconds = 60 * reservation.reservationDuration)) > present %}
+          &ltreservation&gt<br>
+          &nbsp&nbsp&ltresourceName&gt{{reservation.resourceName}}&lt/resourceName&gt<br>
+          &nbsp&nbsp&ltowner&gt{{reservation.resourceInstructor}}&lt/owner&gt<br>
+          &nbsp&nbsp&ltreservedBy&gt{{reservation.reservationOwnerName}}&lt/reservedBy&gt<br>
+          &nbsp&nbsp&ltreservationTime&gt{{reservation.reservationStartTime}}&lt/reservationTime&gt<br>
+          &nbsp&nbsp&ltduration&gt{{reservation.reservationDuration}}&lt/duration&gt<br>
+          &lt/reservation&gt<br>
+        {% endif %}
+      {% endfor %}
+    &lt/reservations&gt<br>
+    &lt/rss&gt
+  </p>
+  
+  <hr>
+  
+  <div id="titleLink">
+  <button onclick="location.href='/'">Back to HomePage</button>
+  </div>
+  
+  <div id="loginButton">
+  <button onclick="location.href='{{ userLogInOutLink|safe }}'">{{ userLogInOutText }}</button>
+  </div>
+
+</body>
+</html>

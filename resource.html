@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>resource Page</title>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+</head>
+<body>
+    <h1 id="title"><a>Reservation Master Resource: {{ resource.resourceName }}</a></h1>
+    <br>
+    {% if user %}
+    <span>Welcome, {{user}}</span>
+    {% else %}
+    <span>You are not signed in.</span>
+    {% endif %}
+  <hr>
+  
+  <form class="buttonForm" action="/resource" method="post">
+	<input type="hidden" name="resourceGUID" value="{{ resource.resourceGUID }}">
+  </form><br>
+  
+  {% if resource and userId == resource.resourceOwner %}    
+    <span class="itemMarker">Owner: </span>
+	<form class="buttonForm" action="/user" method="post">
+	  <input type="hidden" name="seekUserId" value="{{ resource.resourceOwner }}">
+	  <input type="hidden" name="seekUserName" value="{{ resource.resourceInstructor }}">
+      <button class="homePageUserNameButton" onclick="form.submit();">{{ resource.resourceInstructor }}</button>
+	</form><br>
+	
+	<span class="itemMarker">Current Tags:</span>
+    {% for tag in tags %}
+      <form class="buttonForm" action="/tag/" method="post">
+        <input type="hidden" name="tagName" value="{{ tag }}">
+        <button class="tagButton" onclick="form.submit();">{{ tag.strip() }}</button>
+      </form>
+    {% endfor %}
+    
+    <br>
+    <br>
+    <hr>
+    <br>
+	    
+    <form action="/resource/" method="post">
+      <strong>Edit This Resource:</strong>
+      <br>
+      <input type="hidden" name="resourceGUID" value="{{ resource.resourceGUID }}">  
+      <span class="itemMarker">Resource Name:</span> <input class="createresourceInput" type="text" name="resource_name" value="{{ resource.resourceName }}" required><br>
+      <span class="itemMarker">Available Start Time:</span> <input class="createresourceInput" type="datetime-local" name="resource_start_time" value="{{ resource.resourceRawStartTime }}" required><br>
+      <span class="itemMarker">Available End Time:</span> <input class="createresourceInput" type="datetime-local" name="resource_end_time" value="{{ resource.resourceRawEndTime }}" required><br>
+      <span class="itemMarker">Edit Tags:</span> <input class="createresourceInput" type="text" name="resource_tags" value="{{ resource.resourceTags }}" required><br>
+      <br>
+      <input type="submit" name="edit_resource_submit" value="Edit This Resource">
+    </form>
+  {% else %}
+    <span class="itemMarker">Owner: </span>
+	<form class="buttonForm" action="/user" method="post">
+	  <input type="hidden" name="seekUserId" value="{{ resource.resourceOwner }}">
+	  <input type="hidden" name="seekUserName" value="{{ resource.resourceInstructor }}">
+      <button class="homePageUserNameButton" onclick="form.submit();">{{ resource.resourceInstructor }}</button>
+	</form><br>
+    <span class="itemMarker">Available Start Time:</span> <span class="resourceDateTime">{{ resource.resourceStartTime }}</span><br>
+    <span class="itemMarker">Available End Time:</span> <span class="resourceDateTime">{{ resource.resourceEndTime }}</span><br>
+    <span class="itemMarker">Tags:</span>
+    {% for tag in tags %}
+      <form class="buttonForm" action="/tag/" method="post">
+        <input type="hidden" name="tagName" value="{{ tag }}">
+        <button class="tagButton" onclick="form.submit();">{{ tag.strip() }}</button>
+      </form>
+    {% endfor %}
+    </br>
+    
+    <br>
+    <hr>
+    <br>
+    
+    <form action="/resource/" method="post">
+      <strong>Reserve This Resource:</strong>
+	  <br>
+      <input type = "hidden" name="resourceGUID" value="{{ resource.resourceGUID }}">
+      <input type = "hidden" name="resourceInstructor" value="{{ resource.resourceInstructor }}">
+      <input type = "hidden" name="resourceOwner" value="{{ resource.resourceOwner }}">
+      <input type = "hidden" name="resourceName" value="{{ resource.resourceName }}">
+      Start Time: <input class="createresourceInput" type="datetime-local" name="reservation_start_time" required><br>
+      Duration (minutes): <input class="createresourceInput" type="text" name="reservation_duration" required><br>
+      <input type="submit" name="reserve_resource_submit" value="Reserve">
+    </form>
+  {% endif %}
+  <p>
+  {% if notification %}
+    <p class="notification">
+      {{ notification }}
+    </p>
+  {% endif %}
+  <br>
+  <hr>
+  <br>
+  
+  <h3>Current Reservations:</h3>
+    {% for reservation in reservations %}
+      {% if reservation.resourceGUID == resource.resourceGUID and (reservation.reservationStartTime + datetime.timedelta(seconds = 60 * reservation.reservationDuration)) > present %}
+        <span class="homePageresource">
+  	    <span class="itemMarker">Resource:</span>
+  	    <form class="buttonForm" action="/resource" method="post">
+		  <input type="hidden" name="resourceGUID" value="{{ reservation.resourceGUID }}">
+	      <button class="homePageresourceNameButton" onclick="form.submit();">{{ reservation.resourceName }}</button>
+	    </form><br>
+	    <span class="itemMarker">Owner: </span>
+	    <form class="buttonForm" action="/user" method="post">
+		  <input type="hidden" name="seekUserId" value="{{ reservation.resourceOwner }}">
+		  <input type="hidden" name="seekUserName" value="{{ reservation.resourceInstructor }}">
+	      <button class="homePageUserNameButton" onclick="form.submit();">{{ reservation.resourceInstructor }}</button>
+	    </form><br>
+	    <span class="itemMarker">Reserved by: </span>
+	    <form class="buttonForm" action="/user" method="post">
+		  <input type="hidden" name="seekUserId" value="{{ reservation.reservationOwner }}">
+		  <input type="hidden" name="seekUserName" value="{{ reservation.reservationOwnername }}">
+	      <button class="homePageUserNameButton" onclick="form.submit();">{{ reservation.reservationOwnerName }}</button>
+	    </form><br>
+  	    <span class="itemMarker">Start Time: </span><span class="homePageresourceDateTime">{{ reservation.reservationStartTime }}</span><br>
+  	    <span class="itemMarker">Duration (minutes): </span><span class="homePageresourceDateTime">{{ reservation.reservationDuration }}</span><br>
+  	    <br>
+        </span>
+      {% endif %}
+    {% endfor %}
+  
+  <br>
+  <hr>
+  <br>
+  
+  <form action="/rss" method="post">
+	<input type="hidden" name="resourceGUID" value="{{ resource.resourceGUID }}">
+	<input type="submit" name="RSS_Submit_Button" value="Generate RSS for Resource {{ resource.resourceName }}">
+  </form>
+  
+  <div id="titleLink">
+      <button onclick="location.href='/'">Back to HomePage</button>
+  </div>
+  
+  <div id="loginButton">
+      <button onclick="location.href='{{ userLogInOutLink|safe }}'">{{ userLogInOutText }}</button>
+  </div>
+</body>
+</html>
