@@ -14,6 +14,8 @@ import resources_datastore
 import reservations_datastore
 import backtohome
 
+＃Ting's Copy'
+
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
